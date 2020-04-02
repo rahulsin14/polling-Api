@@ -1,11 +1,8 @@
 const Question=require('../models/question');
 const Option=require('../models/option');
-let id=0;
 module.exports.create=async function(req,res){
     try{
-        id++;
         const question_content=await Question.create({
-            id:id,
             question:req.body.question
         });
         return res.json('200',{

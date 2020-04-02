@@ -1,23 +1,21 @@
 const Question=require('../models/question');
 const Option=require('../models/option');
-let id=0;
 module.exports.create= async function(req,res){
     try{
         let question=await Question.findById(req.params.id);
         if(question){
-            id++;
             let option =await Option.create({
                 question_id:question._id,
                 id:id,
                 text:req.body.text,
                 votes:0,
-                // link_to_vote:"http://localhost:8000/options/{id}/add_vote"
+                link_to_vote:`http://localhost:8000/options/${id}/add_vote`
             })
             question.options.push(option);
             question.save();
             res.json('200',{
                 message:"Option added successfully",
-                data:question
+                data:option
             })
         }else{
             res.json('200',{
@@ -34,19 +32,17 @@ module.exports.create= async function(req,res){
 }
 module.exports.delete=async function(req,res){
     try{
-        let option=await Option.findById(req.params.id)
-        .populate('question_id')
-        .populate({path: 'question_id',
-                    path:'options'});
+        let option=await Option.findById(req.params.id);
+        
         if(option){
             
-            // let question=option.question_id._id;
-            // question.options.pull(option);
-            // question.save();
+            let questionId = option.question_id;
+
             option.remove();
+
+            let question = await Question.findByIdAndUpdate(questionId, { $pull: {options: req.params.id}});
             return res.json('200',{
-                message:'option deleted succesfully',
-                data:option
+                message:'option deleted succesfully'
             });
         }else{
             return res.json('200',{
@@ -60,15 +56,15 @@ module.exports.delete=async function(req,res){
     }
     
 }
-let votes=0;
 module.exports.add_vote=async function(req,res){
     try{
-        let option = await Option.findById(req.params.id).populate('question_id');
+        let option = await Option.findByIdAndUpdate(req.params.id,{$set:{votes:votes+1}});
         if(option){
-            votes++;
-            // let opt=await option.question_id._id.options.find(option);
-            // opt.votes=votes;
-            option.votes=votes;
+            let questionId = option.question_id;
+            let question = await Question.findById(questionId);
+            question.options.pull(option);
+            question.options.push(option);
+            
             return res.json('200',{
                 message:'vote added successfully',
                 data:option

@@ -3,12 +3,7 @@ const mongoose = require('mongoose');
 const optionSchema = new mongoose.Schema({
     question_id:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true,
         ref:'Question'
-    },
-    id:{
-        type:Number,
-        require:true
     },
     text: {
         type: String,
@@ -23,7 +18,7 @@ const optionSchema = new mongoose.Schema({
         }
     ,
     link_to_vote:{
-        type:mongoose.Schema.Types.ObjectId,
+        type:String,
         require:true
     }
 
