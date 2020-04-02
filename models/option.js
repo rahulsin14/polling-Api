@@ -5,6 +5,10 @@ const optionSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Question'
     },
+    id:{
+        type:Number,
+        require:true
+    },
     text: {
         type: String,
         required: true
