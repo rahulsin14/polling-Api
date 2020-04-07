@@ -60,7 +60,7 @@ module.exports.delete=async function(req,res){
 }
 module.exports.add_vote=async function(req,res){
     try{
-        let option = await Option.findByIdAndUpdate(req.params.id,{$set:{votes:votes+1}});
+        let option = await Option.findByIdAndUpdate(req.params.id,{$inc:{votes:1}});
         if(option){
             let questionId = option.question_id;
             let question = await Question.findById(questionId);
