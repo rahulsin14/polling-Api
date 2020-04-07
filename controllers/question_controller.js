@@ -25,8 +25,7 @@ module.exports.delete=async function(req,res){
             await Option.deleteMany(question.options._id);
             question.remove();
             return res.json('200',{
-                message:'question deleted succesfully',
-                data:question
+                message:'question deleted succesfully'
             });
         }else{
             return res.json('200',{
